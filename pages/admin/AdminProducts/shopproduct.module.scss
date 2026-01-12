@@ -1,0 +1,149 @@
+.container {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.addBtn {
+  background: #2563eb;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.tableWrap {
+  overflow-x: auto;
+  .table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th, td {
+    padding: 10px;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: center;
+  }
+
+  th {
+    background: #f3f4f6;
+  }
+}
+}
+
+
+
+.actionBtns {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.editBtn {
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  padding: 6px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.deleteBtn {
+  background: #dc2626;
+  color: #fff;
+  border: none;
+  padding: 6px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.editBtn:hover {
+  background: #1d4ed8;
+}
+
+.deleteBtn:hover {
+  background: #b91c1c;
+}
+
+.empty {
+  text-align: center;
+  color: #6b7280;
+}
+
+/* ===== MODAL ===== */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: white;
+  width: 95%;
+  max-width: 500px;
+  padding: 20px;
+  border-radius: 12px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 12px;
+
+  label {
+    font-weight: 600;
+    margin-bottom: 5px;
+  }
+
+  input, select {
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 15px;
+
+  button {
+    padding: 8px 14px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+  }
+}
+
+.saveBtn {
+  background: #2563eb;
+  color: white;
+}
+
+/* MOBILE */
+@media (max-width: 600px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

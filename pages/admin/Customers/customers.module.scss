@@ -1,0 +1,130 @@
+.container {
+  padding: 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.addBtn {
+  background: #111;
+  color: #fff;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.tableWrap {
+  margin-top: 20px;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th, td {
+    padding: 10px;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: center;
+  }
+
+  th {
+    background: #f3f4f6;
+  }
+}
+
+.empty {
+  text-align: center;
+  padding: 20px;
+}
+
+.actionBtns {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.editBtn {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 6px;
+  border-radius: 4px;
+}
+
+.deleteBtn {
+  background: #dc2626;
+  color: white;
+  border: none;
+  padding: 6px;
+  border-radius: 4px;
+}
+
+/* ===== MODAL ===== */
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal {
+  background: white;
+  padding: 20px;
+  width: 420px;
+  border-radius: 10px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 12px;
+
+  input, textarea {
+    padding: 8px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+  }
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.saveBtn {
+  background: #16a34a;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 4px;
+}
+
+/* MOBILE */
+@media (max-width: 600px) {
+  .modal {
+    width: 90%;
+  }
+}
+
+.searchInput {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+  width: 220px;
+  outline: none;
+}
+
+.searchInput:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 1px #2563eb;
+}

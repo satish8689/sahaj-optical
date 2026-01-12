@@ -1,0 +1,443 @@
+
+
+/* LAYOUT */
+.container {
+  padding: 20px;
+}
+
+.orderHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+   @media (max-width: 640px) {
+     display: grid;
+   }
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.searchInput {
+  padding: 9px 14px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  font-size: 14px;
+  min-width: 220px;
+  transition: border 0.2s ease;
+
+  &:focus {
+    outline: none;
+    border-color: #2563eb;
+  }
+}
+
+.newOrder {
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.list {
+  // display: grid;
+  // gap: 14px;
+
+  .card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 14px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+ margin-bottom: 10px;
+    .cardHeader {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px dashed #e5e7eb;
+      padding-bottom: 8px;
+      margin-bottom: 10px;
+
+      h4 {
+        font-size: 16px;
+        margin: 0;
+        color: #1e293b;
+      }
+
+      span {
+        font-size: 13px;
+        color: #64748b;
+      }
+
+      .amount {
+        font-weight: 700;
+        color: #16a34a;
+        font-size: 16px;
+      }
+    }
+
+    /* PRESCRIPTION TABLE */
+    .prescription {
+      background: #f8fafc;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 10px;
+
+      .pRowHeader {
+        display: grid;
+        grid-template-columns: 1.4fr 1fr 1fr;
+        background: #1e3a8a;
+        color: #fff;
+        font-size: 13px;
+        font-weight: 600;
+
+        span {
+          padding: 8px;
+          text-align: center;
+        }
+      }
+
+      .pRow {
+        display: grid;
+        grid-template-columns: 1.4fr 1fr 1fr;
+        border-bottom: 1px solid #e5e7eb;
+        font-size: 13px;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        label {
+          padding: 8px;
+          background: #eef2ff;
+          font-weight: 500;
+        }
+        label {
+          padding: 8px;
+          background: #eef2ff;
+          font-weight: 500;
+        }
+        span {
+          padding: 8px;
+          text-align: center;
+          background: #fff;
+        }
+      }
+    }
+
+    .cardFooter {
+      display: flex;
+      // justify-content: space-between;
+      justify-content: end;
+      font-size: 14px;
+      margin-top: 6px;
+      span{
+        padding: 0px 10px;
+      }
+      .remaining {
+        font-weight: 600;
+        color: #dc2626;
+      }
+    }
+  }
+
+  /* MOBILE */
+  @media (max-width: 640px) {
+    .card {
+      padding: 12px;
+
+      .prescription {
+        overflow-x: auto;
+
+        .pRowHeader,
+        .pRow {
+          min-width: 370px;
+        }
+      }
+    }
+  }
+}
+
+
+/* MODAL */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalCard {
+  background: #fff;
+  width: 95%;
+  max-width: 760px;
+  max-height: 90vh;
+  overflow-y: auto;
+  border-radius: 14px;
+}
+
+.modalHeader {
+  background: #1e3a8a;
+  color: #fff;
+  padding: 0px 18px;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* FORM */
+.section {
+  padding: 20px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 12px;
+
+  label {
+    font-size: 12px;
+    color: #475569;
+  }
+
+  input,
+  textarea {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    font-size: 14px;
+  }
+
+  textarea {
+    resize: none;
+    min-height: 70px;
+  }
+}
+
+/* GRID */
+.grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.grid3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 12px;
+  align-items: end;
+}
+
+/* PRODUCT */
+.productCard {
+  background: #f9fafb;
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  margin-bottom: 14px;
+}
+
+.amount {
+  min-width: 80px;
+  font-weight: 600;
+  color: #16a34a;
+  text-align: right;
+}
+
+.removeBtn {
+  background: none;
+  border: none;
+  color: #dc2626;
+  margin-top: 8px;
+  cursor: pointer;
+}
+
+/* ADD PRODUCT */
+.addProductWrap {
+  display: flex;
+  justify-content: flex-end;
+
+  button {
+    background: #0ea5e9;
+    color: #fff;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 8px;
+  }
+}
+
+/* PAYMENT */
+.summaryRow {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+/* FOOTER */
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 18px;
+}
+
+.cancel {
+  background: #e5e7eb;
+  padding: 10px 18px;
+  border-radius: 8px;
+  border: none;
+}
+
+.save {
+  background: #16a34a;
+  color: #fff;
+  padding: 10px 22px;
+  border-radius: 8px;
+  border: none;
+}
+
+
+.eyeSection {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 18px;
+
+  .eyeTitle {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1e3a8a;
+    margin-bottom: 14px;
+  }
+
+  .eyeTable {
+    border: 1px solid #c7d2fe;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .prescriptionBlock {
+    border-bottom: 6px solid #eef2ff;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  .rowfull{
+    // float: right;
+    text-align: end;
+    button {
+      padding: 20px;
+    }
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    align-items: center;
+    border-bottom: 1px solid #e5e7eb;
+    margin-bottom: 0px;
+    &:last-child {
+      border-bottom: none;
+    }
+
+    div {
+      padding: 12px;
+      background: #eef2ff;
+      font-weight: 500;
+      color: #1e293b;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-left: 1px solid #e5e7eb;
+      text-align: center;
+      font-size: 14px;
+
+      &::placeholder {
+        color: #94a3b8;
+      }
+
+      &:focus {
+        outline: none;
+        background: #f8fafc;
+      }
+    }
+  }
+
+  .header {
+    div {
+      background: #1e3a8a;
+      color: #fff;
+      text-align: center;
+      font-weight: 600;
+    }
+  }
+
+  .label {
+    font-weight: 600;
+  }
+
+  .addMoreWrap {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 14px;
+
+    button {
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+
+      &:hover {
+        background: #1d4ed8;
+      }
+    }
+  }
+
+  /* Mobile */
+  @media (max-width: 640px) {
+    .eyeTable {
+      overflow-x: auto;
+    }
+
+    .row {
+      min-width: 520px;
+    }
+    .header{
+      display: grid;
+      margin-bottom: 10px;
+    }
+  }
+}
+
+
+.deleteBtn {
+  background: #dc2626;
+  color: #fff;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.billButton{
+  border-radius: 4px;
+   cursor: pointer;
+   margin-right:5px;
+}
