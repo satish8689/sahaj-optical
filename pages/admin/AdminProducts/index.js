@@ -76,7 +76,13 @@ export default function AdminProducts() {
   };
 
   const openEditModal = (product) => {
-    setForm(product);
+    setForm({
+      ...product,
+      productName:
+        typeof product.productName === 'object'
+          ? product.productName.productName
+          : product.productName,
+    });
     setEditProduct(product);
     setShowModal(true);
   };
@@ -191,7 +197,7 @@ export default function AdminProducts() {
 
             {products.map((item, index) => (
               <tr key={item.id}>
-                <td>{index+1}</td>
+                <td>{index + 1}</td>
                 <td>{item.productName}</td>
                 <td>₹{item.salePrice}</td>
                 <td>{item.quantity}</td>
@@ -236,11 +242,13 @@ export default function AdminProducts() {
                   required
                 >
                   <option value="">Select Product</option>
-                  {productOptions.map((p, i) => (
-                    <option key={i} value={p}>
-                      {p}
-                    </option>
-                  ))}
+                  {productOptions
+                    .filter(p => p?.productName)
+                    .map((p, i) => (
+                      <option key={p.id || i} value={p.productName}>
+                        {p.productName}
+                      </option>
+                    ))}
                 </select>
                 <input
                   type="text"

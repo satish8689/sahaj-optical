@@ -1,5 +1,5 @@
 'use client';
-
+import Head from "next/head";
 import React, { useEffect, useState } from 'react';
 import { FaHeart, FaShoppingCart } from 'react-icons/fa';
 import styles from './products.module.scss';
@@ -230,6 +230,11 @@ export default function ProductList() {
 
     return (
         <>
+        <Head>
+        <title>Sahaj Optical</title>
+        <link rel="manifest" href="/manifest-user.json" />
+        <meta name="theme-color" content="#2563eb" />
+      </Head>
             <div className={styles.filterBar}>
 
                 <img
@@ -496,7 +501,7 @@ export default function ProductList() {
             {showInstallPopup && (
                 <div className={styles.installPromptOverlay}>
                     <div className={styles.installPromptBox}>
-                        <p>Add this app to your home screen?</p>
+                        <p>Install App on your device?</p>
                         <div className={styles.buttonGroup}>
                             <button className={styles.cancelBtn} onClick={() => setShowInstallPopup(false)}>Cancel</button>
                             <button className={styles.installBtn} onClick={handleInstallClick}>Install</button>

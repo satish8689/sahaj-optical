@@ -1,5 +1,5 @@
 'use client';
-
+import Head from "next/head";
 import { useEffect, useState } from 'react';
 import CryptoJS from 'crypto-js';
 import styles from './indexadmin.module.scss';
@@ -13,6 +13,7 @@ export default function Admin() {
   const [showPopup, setShowPopup] = useState(true);
   const [activeMenu, setActiveMenu] = useState('products');
   const [sidebarOpen, setSidebarOpen] = useState(false); // 🔥 mobile toggle
+  const [showInstallPopup, setShowInstallPopup] = useState(false);
 
   const SECRET_KEY = 'mySecretKey';
   const VALID_PASSWORD = '998877';
@@ -42,6 +43,34 @@ export default function Admin() {
     }
   };
 
+  useEffect(() => {
+          const handleBeforeInstallPrompt = (e) => {
+              e.preventDefault(); // Prevent automatic mini-infobar
+              setDeferredPrompt(e); // Save the event for later
+              setShowInstallPopup(true); // Show our custom install popup
+          };
+  
+          window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+  
+          return () => {
+              window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+          };
+      }, []);
+  
+      const handleInstallClick = async () => {
+          if (deferredPrompt) {
+              deferredPrompt.prompt();
+              const { outcome } = await deferredPrompt.userChoice;
+              if (outcome === 'accepted') {
+                  console.log('User accepted install');
+              } else {
+                  console.log('User dismissed install');
+              }
+              setDeferredPrompt(null);
+              setShowInstallPopup(false);
+          }
+      };
+
   if (!isAuthenticated && showPopup) {
     return (
       <div className={styles.popupOverlay}>
@@ -63,6 +92,12 @@ export default function Admin() {
   }
 
   return (
+    <>
+    <Head>
+        <title>Admin Panel</title>
+        <link rel="manifest" href="/manifest-admin.json" />
+        <meta name="theme-color" content="#111827" />
+      </Head>
     <div className={styles.adminLayout}>
 
       {/* MOBILE HEADER */}
@@ -143,7 +178,18 @@ export default function Admin() {
           </>
         )}
       </main>
-    </div>
+      {showInstallPopup && (
+                <div className={styles.installPromptOverlay}>
+                    <div className={styles.installPromptBox}>
+                        <p>Install Admin App on your device?</p>
+                        <div className={styles.buttonGroup}>
+                            <button className={styles.cancelBtn} onClick={() => setShowInstallPopup(false)}>Cancel</button>
+                            <button className={styles.installBtn} onClick={handleInstallClick}>Install</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+    </div></>
   );
 }
 

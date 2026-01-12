@@ -230,6 +230,11 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 14px;
+   @media (max-width: 640px) {
+    
+       grid-template-columns: 1fr;
+    
+  }
 }
 
 .grid3 {
@@ -367,6 +372,10 @@
       text-align: center;
       font-size: 14px;
 
+      @media (max-width: 640px) {
+        width:75%;
+      }
+
       &::placeholder {
         color: #94a3b8;
       }
@@ -418,11 +427,14 @@
     }
 
     .row {
-      min-width: 520px;
+      min-width: auto;
     }
     .header{
       display: grid;
       margin-bottom: 10px;
+    }
+    .grid2{
+       grid-template-columns: 1fr;
     }
   }
 }

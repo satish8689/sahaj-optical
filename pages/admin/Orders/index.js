@@ -10,7 +10,7 @@ export default function Orders() {
   const [orders, setOrders] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [search, setSearch] = useState('');
-    const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const emptyPrescription = {
     name: '',
     sphericalR: '',
@@ -45,7 +45,7 @@ export default function Orders() {
   useEffect(() => {
     fetchOrders();
   }, []);
-  
+
 
   const addPrescription = () => {
     setForm(prev => ({
@@ -55,11 +55,11 @@ export default function Orders() {
   };
 
   const loadImage = (src) =>
-  new Promise((resolve) => {
-    const img = new Image();
-    img.src = src;
-    img.onload = () => resolve(img);
-  });
+    new Promise((resolve) => {
+      const img = new Image();
+      img.src = src;
+      img.onload = () => resolve(img);
+    });
 
   const removePrescription = (i) => {
     const updated = [...form.prescriptions];
@@ -130,108 +130,111 @@ export default function Orders() {
   };
 
   const generateAndStorePDF = async (order) => {
-  const doc = new jsPDF("p", "mm", "a4");
+    const doc = new jsPDF("p", "mm", "a4");
 
-  /* ---------------- LOGO ---------------- */
-  const logoImg = await loadImage("/logo.png");
-  doc.addImage(logoImg, "PNG", 10, 8, 25, 18);
+    /* ---------------- LOGO ---------------- */
+    const logoImg = await loadImage("/logo.png");
+    doc.addImage(logoImg, "PNG", 10, 8, 25, 18);
 
-  /* ---------------- HEADER ---------------- */
-  doc.setFontSize(18);
-  doc.setFont("helvetica", "bold");
-  doc.text("SAHAJ OPTICAL", 105, 15, { align: "center" });
+    /* ---------------- HEADER ---------------- */
+    doc.setFontSize(18);
+    doc.setFont("helvetica", "bold");
+    doc.text("SAHAJ OPTICAL", 105, 15, { align: "center" });
 
-  doc.setFontSize(10);
-  doc.setFont("helvetica", "normal");
-  doc.text("Mobile: +91 96170 93363", 105, 21, { align: "center" });
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    doc.text("Mobile: +91 96170 93363", 105, 21, { align: "center" });
 
-  doc.line(10, 28, 200, 28);
+    doc.line(10, 28, 200, 28);
 
-  /* ---------------- CUSTOMER DETAILS ---------------- */
-  doc.setFontSize(11);
-  doc.setFont("helvetica", "bold");
-  doc.text("Customer Details", 10, 36);
+    /* ---------------- CUSTOMER DETAILS ---------------- */
+    doc.setFontSize(11);
+    doc.setFont("helvetica", "bold");
+    doc.text("Customer Details", 10, 36);
 
-  doc.setFont("helvetica", "normal");
-  doc.text(`Name: ${order.name}`, 10, 42);
-  doc.text(`Mobile: ${order.mobile}`, 10, 48);
-  doc.text(`Address: ${order.address}`, 10, 54);
-  doc.text(`Date: ${order.date}`, 140, 42);
+    doc.setFont("helvetica", "normal");
+    doc.text(`Name: ${order.name}`, 10, 42);
+    doc.text(`Mobile: ${order.mobile}`, 10, 48);
+    doc.text(`Address: ${order.address}`, 10, 54);
+    doc.text(`Date: ${order.date}`, 140, 42);
 
-  /* ---------------- PRESCRIPTION TABLE ---------------- */
-  doc.setFont("helvetica", "bold");
-  doc.text("Eye Test Prescription", 10, 64);
+    /* ---------------- PRESCRIPTION TABLE ---------------- */
+    doc.setFont("helvetica", "bold");
+    doc.text("Eye Test Prescription", 10, 64);
 
-  const tableBody = [];
+    const tableBody = [];
 
-  order.prescriptions.forEach((p) => {
-    tableBody.push(
-      [{ content: `Name: ${p.name || "-"}`, colSpan: 3, styles: { fontStyle: "bold" } }],
-      ["Spherical", p.sphericalR || "0.00", p.sphericalL || "0.00"],
-      ["Cylindrical", p.cylindricalR || "0.00", p.cylindricalL || "0.00"],
-      ["Axis", p.axisR || "0.00", p.axisL || "0.00"],
-      ["Pupil Distance", p.pdR || "0.00", p.pdL || "0.00"],
-      ["Add Power", p.addR || "0.00", p.addL || "0.00"],
-      [{ content: " ", colSpan: 3 }]
+    order.prescriptions.forEach((p) => {
+      tableBody.push(
+        [{ content: `Name: ${p.name || "-"}`, colSpan: 3, styles: { fontStyle: "bold" } }],
+        ["Spherical", p.sphericalR || "0.00", p.sphericalL || "0.00"],
+        ["Cylindrical", p.cylindricalR || "0.00", p.cylindricalL || "0.00"],
+        ["Axis", p.axisR || "0.00", p.axisL || "0.00"],
+        ["Pupil Distance", p.pdR || "0.00", p.pdL || "0.00"],
+        ["Add Power", p.addR || "0.00", p.addL || "0.00"],
+        [{ content: " ", colSpan: 3 }]
+      );
+    });
+
+    doc.autoTable({
+      startY: 68,
+      head: [["Single Vision", "Right Eye", "Left Eye"]],
+      body: tableBody,
+      theme: "grid",
+      styles: {
+        fontSize: 10,
+        cellPadding: 3,
+      },
+      headStyles: {
+        fillColor: [0, 0, 0],
+        textColor: 255,
+      },
+    });
+
+    /* ---------------- TESTED BY ---------------- */
+    let afterTableY = doc.lastAutoTable.finalY + 6;
+    doc.setFont("helvetica", "italic");
+    doc.text("Tested By: Vikrant Acharya", 10, afterTableY);
+
+    /* ---------------- PAYMENT SUMMARY (RIGHT SIDE) ---------------- */
+    let paymentY = afterTableY + 12;
+    const rightX = 190;
+
+    doc.setFont("helvetica", "bold");
+    doc.text("Payment Summary", rightX, paymentY, { align: "right" });
+
+    doc.setFont("helvetica", "normal");
+    doc.text(`Total Amount: Rs. ${order.total}`, rightX, paymentY + 6, { align: "right" });
+    doc.text(`Advance Paid: Rs. ${order.advance}`, rightX, paymentY + 12, { align: "right" });
+    doc.text(`Remaining Amount: Rs. ${order.remaining}`, rightX, paymentY + 18, { align: "right" });
+
+    /* ---------------- FOOTER ---------------- */
+    doc.line(10, 280, 200, 280);
+    doc.setFontSize(10);
+    doc.text("Thank You For Visiting Sahaj Optical", 105, 286, { align: "center" });
+
+    /* ---------------- SAVE ---------------- */
+    const fileName = `Sahaj-Optical-Bill-${order.name}-${order.id}.pdf`;
+    doc.save(fileName);
+
+    /* ---------------- WHATSAPP REDIRECT ---------------- */
+    const phone = order.mobile.replace(/\D/g, "");
+    const message = encodeURIComponent(
+      `Hello ${order.name},\n\nYour eye test bill from *Sahaj Optical* is ready.\n\nThank you for visiting us.`
     );
-  });
 
-  doc.autoTable({
-    startY: 68,
-    head: [["Single Vision", "Right Eye", "Left Eye"]],
-    body: tableBody,
-    theme: "grid",
-    styles: {
-      fontSize: 10,
-      cellPadding: 3,
-    },
-    headStyles: {
-      fillColor: [0, 0, 0],
-      textColor: 255,
-    },
-  });
+    const whatsappUrl = `https://wa.me/91${phone}?text=${message}`;
 
-  /* ---------------- TESTED BY ---------------- */
-  let afterTableY = doc.lastAutoTable.finalY + 6;
-  doc.setFont("helvetica", "italic");
-  doc.text("Tested By: Vikrant Acharya", 10, afterTableY);
-
-  /* ---------------- PAYMENT SUMMARY (RIGHT SIDE) ---------------- */
-  let paymentY = afterTableY + 12;
-  const rightX = 190;
-
-  doc.setFont("helvetica", "bold");
-  doc.text("Payment Summary", rightX, paymentY, { align: "right" });
-
-  doc.setFont("helvetica", "normal");
-  doc.text(`Total Amount: Rs. ${order.total}`, rightX, paymentY + 6, { align: "right" });
-  doc.text(`Advance Paid: Rs. ${order.advance}`, rightX, paymentY + 12, { align: "right" });
-  doc.text(`Remaining Amount: Rs. ${order.remaining}`, rightX, paymentY + 18, { align: "right" });
-
-  /* ---------------- FOOTER ---------------- */
-  doc.line(10, 280, 200, 280);
-  doc.setFontSize(10);
-  doc.text("Thank You For Visiting Sahaj Optical", 105, 286, { align: "center" });
-
-  /* ---------------- SAVE ---------------- */
-  const fileName = `Sahaj-Optical-Bill-${order.name}-${order.id}.pdf`;
-  doc.save(fileName);
-
-  /* ---------------- WHATSAPP REDIRECT ---------------- */
-  const phone = order.mobile.replace(/\D/g, "");
-  const message = encodeURIComponent(
-    `Hello ${order.name},\n\nYour eye test bill from *Sahaj Optical* is ready.\n\nThank you for visiting us.`
-  );
-
-  const whatsappUrl = `https://wa.me/91${phone}?text=${message}`;
-
-  setTimeout(() => {
-    window.open(whatsappUrl, "_blank");
-  }, 800);
-};
+    setTimeout(() => {
+      window.open(whatsappUrl, "_blank");
+    }, 800);
+  };
 
 
-
+  useEffect(() => {
+    document.body.style.overflow = showModal ? "hidden" : "auto";
+    return () => (document.body.style.overflow = "auto");
+  }, [showModal]);
   return (
     <div className={styles.container}>
       <div className={styles.orderHeader}>
@@ -356,7 +359,7 @@ export default function Orders() {
               <h2>Create Order</h2>
               <span onClick={() => setShowModal(false)}>✕</span>
             </div>
-
+ <div className={styles.modalContent}>
             {/* CUSTOMER */}
             <div className={styles.section}>
               <h3>Customer Details</h3>
@@ -389,7 +392,7 @@ export default function Orders() {
                 </div>
               </div>
             </div>
-
+</div>
 
 
             <div className={styles.eyeSection}>

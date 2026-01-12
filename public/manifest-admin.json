@@ -1,12 +1,11 @@
 {
   "name": "Sahaj Optical Admin",
-  "short_name": "Sahaj Admin",
+  "short_name": "Admin",
   "start_url": "/admin",
   "scope": "/admin",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#3f51b5",
-  "orientation": "portrait",
+  "theme_color": "#111827",
   "icons": [
     {
       "src": "/favicon-admin.png",

@@ -12,7 +12,8 @@ export default function Home() {
     return (
         <div>
             <ToastContainer position="top-right" autoClose={2000} />
-            <h1>Comming Soon</h1>
+            {/* <div className={"loadercontainer"}><div className={"loader"}></div></div> */}
+            {/* <h1>Comming Soon</h1> */}
             {/* <ul>{productss.map(products => <li key={products.id}>{products.title}</li>)}</ul> */}
         </div>
     );

@@ -1,11 +1,11 @@
 {
   "name": "Sahaj Optical",
-  "short_name": "Sahaj Optical",
+  "short_name": "Sahaj",
   "start_url": "/products",
+  "scope": "/products",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#e91e63",
-  "orientation": "portrait",
+  "theme_color": "#2563eb",
   "icons": [
     {
       "src": "/favicon.png",
