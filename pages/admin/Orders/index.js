@@ -77,9 +77,10 @@ export default function Orders() {
   };
 
   const remaining = Number(form.total) - Number(form.advance || 0);
-  console.log("remaining", remaining)
+  
   const handleSubmit = async () => {
-
+    // e.preventDefault();
+    setLoading(true);
     const cleanedPrescriptions = form.prescriptions.filter(p =>
       Object.values(p).some(v => v !== '')
     );
@@ -236,6 +237,21 @@ export default function Orders() {
     document.body.style.overflow = showModal ? "hidden" : "auto";
     return () => (document.body.style.overflow = "auto");
   }, [showModal]);
+
+  const addNewOrder = () => {
+    setShowModal(true);
+    setForm({
+    name: '',
+    mobile: '',
+    address: '',
+    date: '',
+    prescriptions: [emptyPrescription],
+    remark: '',
+    total: 0,
+    advance: 0,
+    remaining: 0
+  })
+  }
   return (
     <div className={styles.container}>
       <div className={styles.orderHeader}>
@@ -250,9 +266,9 @@ export default function Orders() {
             className={styles.searchInput}
           />
 
-          {/* <button className={styles.newOrder} onClick={() => setShowModal(true)}>
+          <button className={styles.newOrder} onClick={addNewOrder}>
             <FaPlus /> New Order
-          </button> */}
+          </button>
         </div>
       </div>
 
@@ -599,9 +615,10 @@ export default function Orders() {
               <button className={styles.cancel} onClick={() => setShowModal(false)}>
                 Cancel
               </button>
-              <button className={styles.save} onClick={handleSubmit}>
-                Save Order
-              </button>
+             
+              <button type="submit" onClick={handleSubmit} className={styles.save} disabled={loading}>
+                  {loading ? 'Saving...': 'Save Order'}
+                </button>
             </div>
 
           </div>
