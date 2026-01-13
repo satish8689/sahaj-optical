@@ -93,11 +93,6 @@ export default function Admin() {
 
   return (
     <>
-    <Head>
-        <title>Admin Panel</title>
-        <link rel="manifest" href="/manifest-admin.json" />
-        <meta name="theme-color" content="#111827" />
-      </Head>
     <div className={styles.adminLayout}>
 
       {/* MOBILE HEADER */}

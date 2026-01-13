@@ -144,6 +144,7 @@ export default function Orders() {
     doc.setFontSize(10);
     doc.setFont("helvetica", "normal");
     doc.text("Mobile: +91 96170 93363", 105, 21, { align: "center" });
+    doc.text("Address: Kalandi Gold City, Near Aurobindo Hospital, Indore", 105, 23, { align: "center" });
 
     doc.line(10, 28, 200, 28);
 
@@ -154,19 +155,19 @@ export default function Orders() {
 
     doc.setFont("helvetica", "normal");
     doc.text(`Name: ${order.name}`, 10, 42);
-    doc.text(`Mobile: ${order.mobile}`, 10, 48);
-    doc.text(`Address: ${order.address}`, 10, 54);
+    doc.text(`Mobile: ${order.mobile}`, 70, 42);
+    doc.text(`Address: ${order.address}`, 10, 49);
     doc.text(`Date: ${order.date}`, 140, 42);
 
     /* ---------------- PRESCRIPTION TABLE ---------------- */
     doc.setFont("helvetica", "bold");
-    doc.text("Eye Test Prescription", 10, 64);
+    doc.text("Eye Test Prescription", 15, 58);
 
     const tableBody = [];
 
     order.prescriptions.forEach((p) => {
       tableBody.push(
-        [{ content: `Name: ${p.name || "-"}`, colSpan: 3, styles: { fontStyle: "bold" } }],
+        [{ content: `${p.name || "-"}`, colSpan: 3, styles: { fontStyle: "bold" } }],
         ["Spherical", p.sphericalR || "0.00", p.sphericalL || "0.00"],
         ["Cylindrical", p.cylindricalR || "0.00", p.cylindricalL || "0.00"],
         ["Axis", p.axisR || "0.00", p.axisL || "0.00"],
@@ -177,13 +178,13 @@ export default function Orders() {
     });
 
     doc.autoTable({
-      startY: 68,
+      startY: 60,
       head: [["Single Vision", "Right Eye", "Left Eye"]],
       body: tableBody,
       theme: "grid",
       styles: {
         fontSize: 10,
-        cellPadding: 3,
+        cellPadding: 2,
       },
       headStyles: {
         fillColor: [0, 0, 0],
@@ -194,10 +195,10 @@ export default function Orders() {
     /* ---------------- TESTED BY ---------------- */
     let afterTableY = doc.lastAutoTable.finalY + 6;
     doc.setFont("helvetica", "italic");
-    doc.text("Tested By: Vikrant Acharya", 10, afterTableY);
+    doc.text("Tested By: Vikrant Acharya", 15, afterTableY);
 
     /* ---------------- PAYMENT SUMMARY (RIGHT SIDE) ---------------- */
-    let paymentY = afterTableY + 12;
+    let paymentY = afterTableY + 6;
     const rightX = 190;
 
     doc.setFont("helvetica", "bold");
@@ -227,7 +228,7 @@ export default function Orders() {
 
     setTimeout(() => {
       window.open(whatsappUrl, "_blank");
-    }, 800);
+    }, 9000);
   };
 
 
@@ -249,9 +250,9 @@ export default function Orders() {
             className={styles.searchInput}
           />
 
-          <button className={styles.newOrder} onClick={() => setShowModal(true)}>
+          {/* <button className={styles.newOrder} onClick={() => setShowModal(true)}>
             <FaPlus /> New Order
-          </button>
+          </button> */}
         </div>
       </div>
 

@@ -230,11 +230,6 @@ export default function ProductList() {
 
     return (
         <>
-        <Head>
-        <title>Sahaj Optical</title>
-        <link rel="manifest" href="/manifest-user.json" />
-        <meta name="theme-color" content="#2563eb" />
-      </Head>
             <div className={styles.filterBar}>
 
                 <img
@@ -498,7 +493,7 @@ export default function ProductList() {
                 </div>
             )}
 
-            {showInstallPopup && (
+            {/* {showInstallPopup && (
                 <div className={styles.installPromptOverlay}>
                     <div className={styles.installPromptBox}>
                         <p>Install App on your device?</p>
@@ -508,7 +503,7 @@ export default function ProductList() {
                         </div>
                     </div>
                 </div>
-            )}
+            )} */}
         </>
     );
 }

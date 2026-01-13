@@ -250,11 +250,15 @@ export default function AdminProducts() {
                       </option>
                     ))}
                 </select>
+              </div>
+
+              <div className={styles.sameRow}>                
                 <input
                   type="text"
-                  placeholder="Add new product & press Enter"
-                  onKeyDown={addNewProductName}
+                  placeholder="Add new product title"
+                  // onKeyDown={addNewProductName}
                 />
+                <button className={styles.addTitle} onClick={addNewProductName}> Add Title</button>
               </div>
 
               <div className={styles.grid}>

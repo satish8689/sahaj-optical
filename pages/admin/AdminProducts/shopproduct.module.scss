@@ -22,7 +22,55 @@
   gap: 6px;
   cursor: pointer;
 }
+.sameRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin-bottom: 5px;
+  input {
+    flex: 1;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    font-size: 14px;
+    outline: none;
 
+    &:focus {
+      border-color: #2563eb;
+    }
+  }
+
+  .addTitle {
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: none;
+    background: #2563eb;
+    color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+    white-space: nowrap;
+
+    &:hover {
+      background: #1d4ed8;
+    }
+  }
+
+  /* 📱 Mobile support */
+  @media (max-width: 480px) {
+    gap: 8px;
+
+    input {
+      font-size: 13px;
+      padding: 9px 12px;
+    }
+
+    .addTitle {
+      font-size: 13px;
+      padding: 9px 12px;
+    }
+  }
+}
 .tableWrap {
   overflow-x: auto;
   .table {
