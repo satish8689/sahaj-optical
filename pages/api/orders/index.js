@@ -88,7 +88,7 @@ export default async function handler(req, res) {
       const body = Buffer.concat(buffers).toString();
       const newItem = JSON.parse(body);
       newItem.id = Date.now().toString();
-console.log("newItem", newItem)
+
       const updatedItems = [...items, newItem];
       await writeFileToGitHub(updatedItems, 'Add item', sha);
 

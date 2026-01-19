@@ -249,7 +249,7 @@ const handleLogout = () => {
         <p className={styles.desc}>Customer details</p>
       </Link>
 
-      <Link href="/admin" className={`${styles.adminCard} ${styles.reports}`}>
+      <Link href="/admin/reports" className={`${styles.adminCard} ${styles.reports}`}>
         <div className={styles.icon}>📊</div>
         <h3 className={styles.title}>Reports</h3>
         <p className={styles.desc}>Sales & analytics</p>

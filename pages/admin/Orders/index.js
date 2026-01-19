@@ -7,7 +7,7 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import Link from 'next/link';
 
-export default function AdminOrders() {
+export default function Orders() {
   const [orders, setOrders] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [search, setSearch] = useState('');

@@ -27,7 +27,7 @@ export default function Customers() {
 
   const fetchCustomers = async () => {
     try {
-      const res = await fetch('/api/customers');
+      const res = await fetch('/api/admincustomers');
       const data = await res.json();
       setCustomers(data.data || []);
     } catch (err) {
@@ -74,7 +74,7 @@ export default function Customers() {
         createdAt: editCustomer ? form.createdAt : new Date().toISOString(),
       };
 
-      const res = await fetch('/api/customers', {
+      const res = await fetch('/api/admincustomers', {
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -99,7 +99,7 @@ export default function Customers() {
     try {
       setLoading(true);
 
-      const res = await fetch('/api/customers', {
+      const res = await fetch('/api/admincustomers', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id }),
