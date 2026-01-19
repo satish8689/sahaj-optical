@@ -10,7 +10,11 @@
   align-items: center;
   margin-bottom: 15px;
 }
-
+.backbutton{
+  img{
+    width: 30px;
+  }
+}
 .addBtn {
   background: #2563eb;
   color: white;
@@ -193,5 +197,52 @@
 @media (max-width: 600px) {
   .grid {
     grid-template-columns: 1fr;
+  }
+}
+
+/* Loader */
+/* HTML: <div class="loader"></div> */
+
+.loadercontainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: rgba(255, 255, 255, 0.8);
+  z-index: 1;
+
+  .loader {
+    width: 40px;
+    height: 40px;
+    --c: no-repeat linear-gradient(rgb(112, 109, 103) 0 0);
+    background: var(--c), var(--c), var(--c), var(--c);
+    background-size: 21px 21px;
+    animation: l5 1.5s infinite cubic-bezier(0.3, 1, 0, 1);
+  }
+
+  @keyframes l5 {
+    0% {
+      background-position: 0 0, 100% 0, 100% 100%, 0 100%
+    }
+
+    33% {
+      background-position: 0 0, 100% 0, 100% 100%, 0 100%;
+      width: 60px;
+      height: 60px
+    }
+
+    66% {
+      background-position: 100% 0, 100% 100%, 0 100%, 0 0;
+      width: 60px;
+      height: 60px
+    }
+
+    100% {
+      background-position: 100% 0, 100% 100%, 0 100%, 0 0
+    }
   }
 }

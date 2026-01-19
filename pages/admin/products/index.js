@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import styles from './shopproduct.module.scss';
 import { useState, useEffect } from 'react';
 import { FaEdit, FaPlus, FaTrash } from 'react-icons/fa';
@@ -9,7 +10,7 @@ export default function AdminProducts() {
   const [showModal, setShowModal] = useState(false);
   const [editProduct, setEditProduct] = useState(null);
   const [loading, setLoading] = useState(false);
-
+  const [apiLoading, setApiLoading] = useState(false);
   const [productOptions, setProductOptions] = useState([]);
 
   const [form, setForm] = useState({
@@ -29,7 +30,8 @@ export default function AdminProducts() {
     try {
       const res = await fetch('/api/adminproducts');
       const data = await res.json();
-      setProducts(data.data || []);
+      setProducts(data?.data?.reverse() || []);
+      setApiLoading(false)
     } catch (err) {
       console.error('Fetch failed', err);
     }
@@ -46,6 +48,7 @@ export default function AdminProducts() {
   };
 
   useEffect(() => {
+    setApiLoading(true);
     fetchProducts();
     fetchProductsTitle()
   }, []);
@@ -165,6 +168,7 @@ export default function AdminProducts() {
 
   return (
     <div className={styles.container}>
+        <Link href="/admin" className={`${styles.backbutton}`}><img src="../icon/back.png" /></Link>
       <div className={styles.header}>
         <h1>Shop Products</h1>
         <button className={styles.addBtn} onClick={openAddModal}>
@@ -186,7 +190,9 @@ export default function AdminProducts() {
               <th>Action</th>
             </tr>
           </thead>
-          <tbody>
+          {apiLoading ? (
+                    <div className={styles.loadercontainer}><div className={styles.loader}></div></div>
+                ) :(<tbody>
             {products.length === 0 && (
               <tr>
                 <td colSpan="6" className={styles.empty}>
@@ -222,7 +228,7 @@ export default function AdminProducts() {
                 </td>
               </tr>
             ))}
-          </tbody>
+          </tbody>)}
         </table>
       </div>
 

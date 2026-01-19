@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import styles from './customers.module.scss';
 import { useState, useEffect } from 'react';
 import { FaEdit, FaPlus, FaTrash } from 'react-icons/fa';
@@ -116,6 +117,8 @@ export default function Customers() {
 
   return (
     <div className={styles.container}>
+      <Link href="/admin" className={`${styles.backbutton}`}><img src="../icon/back.png" /></Link>
+            
       <div className={styles.header}>
         <h1>Customers</h1>
         <input

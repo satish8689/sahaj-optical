@@ -2,15 +2,19 @@
 
 import styles from './orders.module.scss';
 import { useState, useEffect } from 'react';
-import { FaFile, FaPlus, FaTrash } from 'react-icons/fa';
+import { FaEdit, FaFile, FaPlus, FaTrash } from 'react-icons/fa';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import Link from 'next/link';
 
 export default function Orders() {
   const [orders, setOrders] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(false);
+  const [apiLoading, setApiLoading] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+  const [editId, setEditId] = useState(null);
   const emptyPrescription = {
     name: '',
     sphericalR: '',
@@ -23,6 +27,8 @@ export default function Orders() {
     pdL: '',
     addR: '',
     addL: '',
+    glassname: '',
+    framename: '',
   };
   const [form, setForm] = useState({
     name: '',
@@ -40,9 +46,11 @@ export default function Orders() {
     const res = await fetch('/api/orders');
     const data = await res.json();
     setOrders(data?.data?.reverse() || []);
+    setApiLoading(false);
   };
 
   useEffect(() => {
+    setApiLoading(true);
     fetchOrders();
   }, []);
 
@@ -77,30 +85,37 @@ export default function Orders() {
   };
 
   const remaining = Number(form.total) - Number(form.advance || 0);
-  
+
   const handleSubmit = async () => {
-    // e.preventDefault();
     setLoading(true);
+
     const cleanedPrescriptions = form.prescriptions.filter(p =>
       Object.values(p).some(v => v !== '')
     );
+
     const payload = {
       ...form,
       prescriptions: cleanedPrescriptions,
       remaining,
-      createdAt: new Date().toISOString(),
+      createdAt: isEdit ? undefined : new Date().toISOString(),
     };
-    console.log("payload", payload)
+
     const res = await fetch('/api/orders', {
-      method: 'POST',
+      method: isEdit ? 'PUT' : 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(
+        isEdit ? { id: editId, ...payload } : payload
+      ),
     });
 
     if (res.ok) {
       setShowModal(false);
+      setIsEdit(false);
+      setEditId(null);
       fetchOrders();
     }
+
+    setLoading(false);
   };
 
   const handleDelete = async (id) => {
@@ -145,7 +160,7 @@ export default function Orders() {
     doc.setFontSize(10);
     doc.setFont("helvetica", "normal");
     doc.text("Mobile: +91 96170 93363", 105, 21, { align: "center" });
-    doc.text("Address: Kalandi Gold City, Near Aurobindo Hospital, Indore", 105, 23, { align: "center" });
+    doc.text("Address: S-48 Kalindi Gold City, Near Aurobindo Hospital, Indore", 105, 26, { align: "center" });
 
     doc.line(10, 28, 200, 28);
 
@@ -168,12 +183,41 @@ export default function Orders() {
 
     order.prescriptions.forEach((p) => {
       tableBody.push(
-        [{ content: `${p.name || "-"}`, colSpan: 3, styles: { fontStyle: "bold" } }],
+        // ✅ NAME (Right side merged)
+        [
+          "Name",
+          {
+            content: p.name || "-",
+            colSpan: 2,
+            styles: { fontStyle: "bold" },
+          },
+        ],
+
         ["Spherical", p.sphericalR || "0.00", p.sphericalL || "0.00"],
         ["Cylindrical", p.cylindricalR || "0.00", p.cylindricalL || "0.00"],
         ["Axis", p.axisR || "0.00", p.axisL || "0.00"],
         ["Pupil Distance", p.pdR || "0.00", p.pdL || "0.00"],
         ["Add Power", p.addR || "0.00", p.addL || "0.00"],
+
+        // ✅ GLASS NAME (Right side merged)
+        [
+          "Glass Name",
+          {
+            content: p.glassname || "--",
+            colSpan: 2,
+          },
+        ],
+
+        // ✅ FRAME NAME (Right side merged)
+        [
+          "Frame Name",
+          {
+            content: p.framename || "--",
+            colSpan: 2,
+          },
+        ],
+
+        // SPACE
         [{ content: " ", colSpan: 3 }]
       );
     });
@@ -241,19 +285,42 @@ export default function Orders() {
   const addNewOrder = () => {
     setShowModal(true);
     setForm({
-    name: '',
-    mobile: '',
-    address: '',
-    date: '',
-    prescriptions: [emptyPrescription],
-    remark: '',
-    total: 0,
-    advance: 0,
-    remaining: 0
-  })
+      name: '',
+      mobile: '',
+      address: '',
+      date: '',
+      prescriptions: [emptyPrescription],
+      remark: '',
+      total: 0,
+      advance: 0,
+      remaining: 0
+    })
   }
+  const handleEdit = (order) => {
+    console.log("order", order)
+    setIsEdit(true);
+    setEditId(order.id);
+    setShowModal(true);
+
+    setForm({
+      name: order.name || '',
+      mobile: order.mobile || '',
+      address: order.address || '',
+      date: order.date || '',
+      prescriptions: order.prescriptions?.length
+        ? order.prescriptions
+        : [emptyPrescription],
+      remark: order.remark || '',
+      total: order.total || 0,
+      advance: order.advance || 0,
+      remaining: order.remaining || 0,
+    });
+  };
+
   return (
     <div className={styles.container}>
+      <Link href="/admin" className={`${styles.backbutton}`}><img src="../icon/back.png" /></Link>
+
       <div className={styles.orderHeader}>
         <h1>Orders</h1>
 
@@ -273,7 +340,9 @@ export default function Orders() {
       </div>
 
       {/* LIST */}
-      <div className={styles.list}>
+      {apiLoading ? (
+        <div className={styles.loadercontainer}><div className={styles.loader}></div></div>
+      ) : (<div className={styles.list}>
         {orders
           .filter(o =>
             o.name?.toLowerCase().includes(search.toLowerCase()) ||
@@ -285,8 +354,11 @@ export default function Orders() {
               {/* HEADER */}
               <div className={styles.cardHeader}>
                 <div>
-                  <h4>{o.name}</h4>
-                  <span>{o.mobile}</span>
+                  <h4> Date: {o.createdAt
+                    ? new Date(o.createdAt).toLocaleDateString('en-GB')
+                    : '--'}</h4>
+                  <h4>{o.name} / Mo. {o.mobile}</h4>
+                  {/* <span>{o.mobile}</span> */}
                 </div>
 
                 <div className={styles.amount}>
@@ -304,7 +376,7 @@ export default function Orders() {
                     <span>Left</span>
                   </div>
 
-                  <div className={styles.pRow}>
+                  <div className={`${styles.pRow} ${styles.pfullRow}`}>
                     <label>Name</label>
                     <span>{p.name}</span>
                   </div>
@@ -338,7 +410,14 @@ export default function Orders() {
                     <span>{p.addR || '0.00'}</span>
                     <span>{p.addL || '0.00'}</span>
                   </div>
-
+                  <div className={`${styles.pRow} ${styles.pfullRow}`}>
+                    <label>Glass Name</label>
+                    <span>{p.glassname || '--'}</span>
+                  </div>
+                  <div className={`${styles.pRow} ${styles.pfullRow}`}>
+                    <label>Frame Name</label>
+                    <span>{p.framename || '--'}</span>
+                  </div>
                 </div>
               ))}
 
@@ -349,6 +428,13 @@ export default function Orders() {
                 <span className={styles.remaining}>
                   Remaining ₹{o.remaining}
                 </span>
+                <button
+                  className={styles.editBtn}
+                  onClick={() => handleEdit(o)}
+                  title="Edit"
+                >
+                  <FaEdit />
+                </button>
                 <button className={styles.billButton} onClick={() => generateAndStorePDF(o)}>
                   <FaFile />
                 </button>
@@ -364,7 +450,7 @@ export default function Orders() {
 
             </div>
           ))}
-      </div>
+      </div>)}
 
 
       {/* MODAL */}
@@ -376,40 +462,42 @@ export default function Orders() {
               <h2>Create Order</h2>
               <span onClick={() => setShowModal(false)}>✕</span>
             </div>
- <div className={styles.modalContent}>
-            {/* CUSTOMER */}
-            <div className={styles.section}>
-              <h3>Customer Details</h3>
+            <div className={styles.modalContent}>
+              {/* CUSTOMER */}
+              <div className={styles.section}>
+                <h3>Customer Details</h3>
 
-              <div className={styles.grid2}>
-                <div className={styles.formGroup}>
-                  <label>Name</label>
-                  <input onChange={e => setForm({ ...form, name: e.target.value })} />
-                </div>
+                <div className={styles.grid2}>
+                  <div className={styles.formGroup}>
+                    <label>Name</label>
+                    <input  value={form.name || ''} onChange={e => setForm({ ...form, name: e.target.value })} />
+                  </div>
 
-                <div className={styles.formGroup}>
-                  <label>Mobile</label>
-                  <input onChange={e => setForm({ ...form, mobile: e.target.value })} />
+                  <div className={styles.formGroup}>
+                    <label>Mobile</label>
+                    <input  value={form.mobile || ''} onChange={e => setForm({ ...form, mobile: e.target.value })} />
+                  </div>
                 </div>
-              </div>
-              <div className={styles.grid2}>
-                <div className={styles.formGroup}>
-                  <label>Address</label>
-                  <input
-                    onChange={e => setForm({ ...form, address: e.target.value })}
-                  />
-                </div>
+                <div className={styles.grid2}>
+                  <div className={styles.formGroup}>
+                    <label>Address</label>
+                    <input
+                    value={form.address || ''}
+                      onChange={e => setForm({ ...form, address: e.target.value })}
+                    />
+                  </div>
 
-                <div className={styles.formGroup}>
-                  <label>Date</label>
-                  <input
-                    type="date"
-                    onChange={e => setForm({ ...form, date: e.target.value })}
-                  />
+                  <div className={styles.formGroup}>
+                    <label>Date</label>
+                    <input
+                      type="date"
+                       value={form.date || ''}
+                      onChange={e => setForm({ ...form, date: e.target.value })}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
-</div>
 
 
             <div className={styles.eyeSection}>
@@ -428,7 +516,7 @@ export default function Orders() {
                   <div key={idx} className={styles.prescriptionBlock}>
 
                     {/* NAME */}
-                    <div className={styles.row}>
+                    <div className={`${styles.row} ${styles.fullRow}`}>
                       <div className={styles.label}>Name</div>
                       <input
                         type="text"
@@ -544,6 +632,28 @@ export default function Orders() {
                         }
                       />
                     </div>
+                    <div className={`${styles.row} ${styles.fullRow}`}>
+                      <div className={styles.label}>Glass Name</div>
+                      <input
+                        type="text"
+                        placeholder="Enter Glass Name"
+                        value={item.glassname || ''}
+                        onChange={e =>
+                          handlePrescriptionChange(idx, 'glassname', e.target.value)
+                        }
+                      />
+                    </div>
+                    <div className={`${styles.row} ${styles.fullRow}`}>
+                      <div className={styles.label}>Frame Name</div>
+                      <input
+                        type="text"
+                        placeholder="Enter Frame Name"
+                        value={item.framename || ''}
+                        onChange={e =>
+                          handlePrescriptionChange(idx, 'framename', e.target.value)
+                        }
+                      />
+                    </div>
 
                     {/* REMOVE */}
                     {form.prescriptions.length > 1 && (
@@ -581,6 +691,7 @@ export default function Orders() {
                 {/* <strong>₹{remaining}</strong> */}
                 <input
                   type="number"
+                  value={form.total || ''}
                   onChange={e => setForm({ ...form, total: e.target.value })}
 
                 />
@@ -589,6 +700,7 @@ export default function Orders() {
                 <label>Advance</label>
                 <input
                   type="number"
+                  value={form.advance || ''}
                   onChange={e => setForm({ ...form, advance: e.target.value })}
                 />
               </div>
@@ -606,6 +718,7 @@ export default function Orders() {
               <div className={styles.formGroup}>
                 <label>Remark</label>
                 <input
+                  value={form.remark || ''}
                   onChange={e => setForm({ ...form, remark: e.target.value })}
                 />
               </div>
@@ -615,10 +728,10 @@ export default function Orders() {
               <button className={styles.cancel} onClick={() => setShowModal(false)}>
                 Cancel
               </button>
-             
+
               <button type="submit" onClick={handleSubmit} className={styles.save} disabled={loading}>
-                  {loading ? 'Saving...': 'Save Order'}
-                </button>
+                {loading ? 'Saving...' : 'Save Order'}
+              </button>
             </div>
 
           </div>

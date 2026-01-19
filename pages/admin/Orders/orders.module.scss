@@ -1,8 +1,12 @@
-
-
 /* LAYOUT */
 .container {
   padding: 20px;
+}
+
+.backbutton {
+  img {
+    width: 30px;
+  }
 }
 
 .orderHeader {
@@ -10,9 +14,10 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
-   @media (max-width: 640px) {
-     display: grid;
-   }
+
+  @media (max-width: 640px) {
+    display: grid;
+  }
 }
 
 .headerRight {
@@ -28,10 +33,11 @@
   font-size: 14px;
   min-width: 220px;
   transition: border 0.2s ease;
+
   @media (max-width: 640px) {
     min-width: 200px;
-  
-   }
+
+  }
 
   &:focus {
     outline: none;
@@ -48,8 +54,9 @@
   display: flex;
   align-items: center;
   gap: 6px;
+
   @media (max-width: 640px) {
-   padding: 10px;
+    padding: 10px;
   }
 }
 
@@ -62,8 +69,9 @@
     border-radius: 12px;
     padding: 14px;
     border: 1px solid #e5e7eb;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
- margin-bottom: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+    margin-bottom: 10px;
+
     .cardHeader {
       display: flex;
       justify-content: space-between;
@@ -126,15 +134,39 @@
           background: #eef2ff;
           font-weight: 500;
         }
+
         label {
           padding: 8px;
           background: #eef2ff;
           font-weight: 500;
         }
+
         span {
           padding: 8px;
           text-align: center;
           background: #fff;
+        }
+      }
+
+      .pfullRow {
+        grid-template-columns: 1.4fr 2fr;
+
+        span {
+          grid-column: span 1;
+          text-align: left;
+          font-weight: 600;
+        }
+
+        @media (max-width: 640px) {
+          grid-template-columns: 1.4fr 2fr;
+
+          div {
+            text-align: left;
+          }
+
+          // input {
+          //   width: 100%;
+          // }
         }
       }
     }
@@ -145,9 +177,11 @@
       justify-content: end;
       font-size: 14px;
       margin-top: 6px;
-      span{
+
+      span {
         padding: 0px 10px;
       }
+
       .remaining {
         font-weight: 600;
         color: #dc2626;
@@ -177,7 +211,7 @@
 .modalOverlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,.6);
+  background: rgba(0, 0, 0, .6);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -237,10 +271,11 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 14px;
-   @media (max-width: 640px) {
-    
-       grid-template-columns: 1fr;
-    
+
+  @media (max-width: 640px) {
+
+    grid-template-columns: 1fr;
+
   }
 }
 
@@ -347,19 +382,24 @@
     }
   }
 
-  .rowfull{
+  .rowfull {
     // float: right;
     text-align: end;
+
     button {
       padding: 20px;
     }
   }
+
+
+
   .row {
     display: grid;
     grid-template-columns: 1.4fr 1fr 1fr;
     align-items: center;
     border-bottom: 1px solid #e5e7eb;
     margin-bottom: 0px;
+
     &:last-child {
       border-bottom: none;
     }
@@ -380,7 +420,7 @@
       font-size: 14px;
 
       @media (max-width: 640px) {
-        width:75%;
+        width: 75%;
       }
 
       &::placeholder {
@@ -391,6 +431,27 @@
         outline: none;
         background: #f8fafc;
       }
+    }
+  }
+
+  .fullRow {
+    grid-template-columns: 1.4fr 2fr;
+
+    input {
+      grid-column: span 1;
+      text-align: left;
+    }
+
+    @media (max-width: 640px) {
+      grid-template-columns: 1.4fr 2fr;
+
+      div {
+        text-align: left;
+      }
+
+      // input {
+      //   width: 100%;
+      // }
     }
   }
 
@@ -436,12 +497,14 @@
     .row {
       min-width: auto;
     }
-    .header{
+
+    .header {
       display: grid;
       margin-bottom: 10px;
     }
-    .grid2{
-       grid-template-columns: 1fr;
+
+    .grid2 {
+      grid-template-columns: 1fr;
     }
   }
 }
@@ -455,8 +518,56 @@
   border-radius: 4px;
   cursor: pointer;
 }
-.billButton{
+
+.billButton {
   border-radius: 4px;
-   cursor: pointer;
-   margin-right:5px;
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+/* Loader */
+/* HTML: <div class="loader"></div> */
+
+.loadercontainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: rgba(255, 255, 255, 0.8);
+  z-index: 1;
+
+  .loader {
+    width: 40px;
+    height: 40px;
+    --c: no-repeat linear-gradient(rgb(112, 109, 103) 0 0);
+    background: var(--c), var(--c), var(--c), var(--c);
+    background-size: 21px 21px;
+    animation: l5 1.5s infinite cubic-bezier(0.3, 1, 0, 1);
+  }
+
+  @keyframes l5 {
+    0% {
+      background-position: 0 0, 100% 0, 100% 100%, 0 100%
+    }
+
+    33% {
+      background-position: 0 0, 100% 0, 100% 100%, 0 100%;
+      width: 60px;
+      height: 60px
+    }
+
+    66% {
+      background-position: 100% 0, 100% 100%, 0 100%, 0 0;
+      width: 60px;
+      height: 60px
+    }
+
+    100% {
+      background-position: 100% 0, 100% 100%, 0 100%, 0 0
+    }
+  }
 }
