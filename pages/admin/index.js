@@ -30,11 +30,56 @@ export default function Admin() {
         setShowPopup(false);
       }
     }
-    sessionStorage.removeItem('admin_code')
+    // sessionStorage.removeItem('admin_code')
   }, []);
 
+useEffect(() => {
+  const encryptedCode = sessionStorage.getItem('admin_code');
+
+  if (encryptedCode) {
+    const decryptedBytes = CryptoJS.AES.decrypt(encryptedCode, SECRET_KEY);
+    const decryptedCode = decryptedBytes.toString(CryptoJS.enc.Utf8);
+
+    if (decryptedCode === VALID_PASSWORD) {
+      setIsAuthenticated(true);
+      setShowPopup(false);
+    }
+  }
+
+  // ⏱ inactivity timeout (2 minutes)
+  let inactivityTimer;
+
+  const resetTimer = () => {
+    clearTimeout(inactivityTimer);
+
+    inactivityTimer = setTimeout(() => {
+      sessionStorage.removeItem('admin_code');
+      setIsAuthenticated(false);
+      setShowPopup(true);
+      console.log('Admin session expired due to inactivity');
+    }, 2 * 60 * 1000); // 2 minutes
+  };
+
+  // 👂 listen to user activity
+  const events = ['mousemove', 'keydown', 'scroll', 'click', 'touchstart'];
+
+  events.forEach(event =>
+    window.addEventListener(event, resetTimer)
+  );
+
+  // start timer immediately
+  resetTimer();
+
+  return () => {
+    clearTimeout(inactivityTimer);
+    events.forEach(event =>
+      window.removeEventListener(event, resetTimer)
+    );
+  };
+}, []);
+
+
   const handleSubmit = (otpValue) => {
-  console.log("otp", otpValue, otpValue === VALID_PASSWORD);
 
   if (otpValue === VALID_PASSWORD) {
     const encryptedCode = CryptoJS.AES.encrypt(
@@ -84,7 +129,10 @@ const handleKeyDown = (e, index) => {
     handleSubmit(otp.join(""));
   }
 };
-
+const handleLogout = () => {
+  sessionStorage.removeItem('admin_code');
+  window.location.href = '/admin'
+};
 
   useEffect(() => {
           const handleBeforeInstallPrompt = (e) => {
@@ -169,10 +217,16 @@ const handleKeyDown = (e, index) => {
      <div className={styles.wrapper}>
   <div className={styles.content}>
     {/* HEADER */}
-    <div className={styles.pageHeader}>
-      <h1>Admin Dashboard</h1>
-      <p>Manage your store from one place</p>
-    </div>
+   <div className={styles.pageHeader}>
+  <div className={styles.headerLeft}>
+    <h1>Admin Dashboard</h1>
+    <p>Manage your store from one place</p>
+  </div>
+
+  <button className={styles.logoutBtn} onClick={handleLogout}>
+    Logout
+  </button>
+</div>
 
     {/* DASHBOARD CARDS */}
     <div className={styles.adminMainSec}>
@@ -195,7 +249,7 @@ const handleKeyDown = (e, index) => {
         <p className={styles.desc}>Customer details</p>
       </Link>
 
-      <Link href="/admin/reports" className={`${styles.adminCard} ${styles.reports}`}>
+      <Link href="/admin" className={`${styles.adminCard} ${styles.reports}`}>
         <div className={styles.icon}>📊</div>
         <h3 className={styles.title}>Reports</h3>
         <p className={styles.desc}>Sales & analytics</p>
