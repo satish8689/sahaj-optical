@@ -121,7 +121,8 @@ export default function Customers() {
             
       <div className={styles.header}>
         <h1>Customers</h1>
-        <input
+        <div className={styles.headerRight}>
+                 <input
           type="text"
           placeholder="Search by name or mobile"
           className={styles.searchInput}
@@ -131,6 +132,8 @@ export default function Customers() {
         <button className={styles.addBtn} onClick={openAddModal}>
           <FaPlus /> Add Customer
         </button>
+                </div>
+        
       </div>
 
       {/* ===== TABLE ===== */}
